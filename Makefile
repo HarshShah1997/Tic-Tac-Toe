@@ -3,7 +3,7 @@ CC = g++
 OGL= -lGL -lGLU -lglut
 
 ticTacToe: $(OBJS)
-	$(CC) ticTacToe.o board.o -o ticTacToe
+	$(CC) ticTacToe.o board.o -o ticTacToe $(OGL)
 
 ticTacToe.o: ticTacToe.cpp ticTacToe.h board.h
 	$(CC) -c ticTacToe.cpp $(OGL)
