@@ -1,5 +1,6 @@
 #include <iostream>
 #include <GL/glut.h>
+#include <string>
 
 #include "ticTacToe.h"
 #include "board.h"
@@ -69,8 +70,24 @@ int check_win(void)
 
 void display_win(int winner) 
 {
+    glBegin(GL_POLYGON);
+        glColor3f(0.0, 0.0, 0.0);
+        glVertex2f(view_left, view_bottom);
+        glVertex2f(view_right, view_bottom);
+        glVertex2f(view_right, view_top);
+        glVertex2f(view_left, view_top);
+    glEnd();
+
+    glColor3f(1.0, 0.0, 0.0);
+
+    std::string message = "Player 0 wins!";
+    message[7] = winner + '0';
+
+    glRasterPos2f(35, 50);
+    for (int i = 0; i < message.size(); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, message[i]);
+    }
     std::cout << "Player " << winner << " wins!" << std::endl;
-    exit(0);
 }
 
 int check_row(int x) 
