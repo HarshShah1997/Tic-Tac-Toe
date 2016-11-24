@@ -1,13 +1,21 @@
 #include <iostream>
 #include <GL/glut.h>
 #include <string>
+#include <utility>
 
 #include "ticTacToe.h"
 #include "board.h"
 
+using std::cout;
+using std::endl;
+using std::pair;
+
+typedef pair<int, int> pii;
+
 Board board (3, 3);
 int view_left, view_bottom, view_right, view_top;
 int current_player = 1;
+bool is_completed = false;
 
 void display(void)
 {
@@ -38,7 +46,7 @@ int main(int argc, char *argv[])
 
 void process_mouse(int button, int state, int x, int y)
 {
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
+    if (!is_completed && button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
         int i = (x / 500.0 * 100 - 5) / 30;
         int j = (y / 500.0 * 100 - 5) / 30;
         if (inside(i, j) && board.getXY(i, 3-j-1) == 0) {
@@ -48,6 +56,18 @@ void process_mouse(int button, int state, int x, int y)
         }
     }
 }
+
+pair< int, pii> find_next_move(int player, int max_player)
+{
+    vector<pii> valid_moves = find_valid_moves(player);
+    if (valid_moves.size() == 0) {
+        return terminal_utility(max_player);
+    }
+    for (int i = 0; i < valid_moves.size(); i++) {
+
+
+
+
 
 int check_win(void)
 {
@@ -68,6 +88,20 @@ int check_win(void)
     return 0;
 }
 
+pair<int, pii> terminal_utility(int max_player)
+{
+    int winner = check_win();
+    if (winner == max_player) {
+        return make_pair(1, make_pair(-1, -1));
+    } else if (winner == 3 - max_player) {
+        return make_pair(-1, make_pair(-1, -1));
+    } else {
+        return make_pair(0, make_pair(-1, -1));
+    }
+}
+
+
+
 void display_win(int winner) 
 {
     glBegin(GL_POLYGON);
@@ -87,7 +121,8 @@ void display_win(int winner)
     for (int i = 0; i < message.size(); i++) {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, message[i]);
     }
-    std::cout << "Player " << winner << " wins!" << std::endl;
+    cout << "Player " << winner << " wins!" << endl;
+    is_completed = true;
 }
 
 int check_row(int x) 

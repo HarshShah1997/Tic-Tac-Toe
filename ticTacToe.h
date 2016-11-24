@@ -1,3 +1,11 @@
+#include <utility>
+#include <vector>
+
+using std::pair;
+using std::vector;
+
+typedef pair<int, int> pii;
+
 void init(void);
 void display(void);
 void draw_initial_board(void);
@@ -9,4 +17,7 @@ int check_win(void);
 int check_row(int x);
 int check_col(int y);
 void display_win(int winner);
+pair< int, pii> find_next_move(int player, int max_player);
+vector<pii> find_valid_moves(int player);
+pair<int, pii> terminal_utility(int max_player);
 
