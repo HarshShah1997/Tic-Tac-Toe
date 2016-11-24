@@ -20,4 +20,6 @@ void display_win(int winner);
 pair< int, pii> find_next_move(int player, int max_player);
 vector<pii> find_valid_moves(int player);
 pair<int, pii> terminal_utility(int max_player);
+vector<pii> find_valid_moves(int player);
+void move_computer(void);
 
