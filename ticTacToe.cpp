@@ -154,15 +154,7 @@ pair<int, pii> terminal_utility(int max_player)
 
 void display_win(int winner) 
 {
-    glBegin(GL_POLYGON);
-        glColor3f(0.0, 0.0, 0.0);
-        glVertex2f(view_left, view_bottom);
-        glVertex2f(view_right, view_bottom);
-        glVertex2f(view_right, view_top);
-        glVertex2f(view_left, view_top);
-    glEnd();
-
-    glColor3f(1.0, 0.0, 0.0);
+    glColor3f(1.0, 1.0, 1.0);
 
     std::string message = "Player 0 wins!";
     message[7] = winner + '0';
@@ -170,7 +162,7 @@ void display_win(int winner)
         message = "Its a tie!";
     }
 
-    glRasterPos2f(35, 50);
+    glRasterPos2f(40, 50);
     for (int i = 0; i < message.size(); i++) {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, message[i]);
     }
