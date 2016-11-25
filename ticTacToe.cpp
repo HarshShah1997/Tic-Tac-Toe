@@ -17,9 +17,10 @@ typedef pair<int, int> pii;
 Board board (3, 3);
 int view_left, view_bottom, view_right, view_top;
 int current_player = 1;
-bool is_completed = false;
+int state = 1;
 unsigned int crossId = 1;
 unsigned int oId = 2;
+bool againstComputer = false;
 
 void display(void)
 {
@@ -28,8 +29,7 @@ void display(void)
     int winner = check_win();
     if (winner != 0) {
         display_win(winner);
-    }
-    if (find_valid_moves(current_player).size() == 0) {
+    } else if (find_valid_moves(current_player).size() == 0) {
         display_win(0);
     }
     glutSwapBuffers();
@@ -37,6 +37,9 @@ void display(void)
 
 int main(int argc, char *argv[])
 {
+    if (argc == 2 && std::string(argv[1]) == "--single") {
+        againstComputer = true;
+    }
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(500, 500);
@@ -51,18 +54,29 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void process_mouse(int button, int state, int x, int y)
+void process_mouse(int button, int buttonState, int x, int y)
 {
-    if (!is_completed && button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
-        int i = (y / 500.0 * 100 - 5) / 30;
-        int j = (x / 500.0 * 100 - 5) / 30;
-        if (inside(i, j) && board.getXY(i, j) == 0) {
-            board.setXY(i, j, current_player);
-            display();
-            if (check_win() != current_player) {
-                current_player = 3 - current_player;
-                move_computer();
+    if (button == GLUT_LEFT_BUTTON && buttonState == GLUT_UP) {
+        if (state == 1) {
+            int i = (y / 500.0 * 100 - 5) / 30;
+            int j = (x / 500.0 * 100 - 5) / 30;
+            if (inside(i, j) && board.getXY(i, j) == 0) {
+                move_player(i, j);
             }
+        } else {
+            reset_board();
+        }
+    }
+}
+
+void move_player(int i, int j)
+{
+    board.setXY(i, j, current_player);
+    display();
+    if (check_win() != current_player) {
+        current_player = 3 - current_player;
+        if (againstComputer) {
+            move_computer();
         }
     }
 }
@@ -75,6 +89,26 @@ void move_computer()
     }
     board.setXY(next_move.first, next_move.second, current_player);
     current_player = 3 - current_player;
+    display();
+}
+
+void reset_board(void)
+{
+    state = 1;
+    current_player = 1;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            board.setXY(i, j, 0);
+        }
+    }
+    glColor3f(0.06, 0.06, 0.06);
+    glBegin(GL_POLYGON);
+        glVertex2f(view_left, view_bottom);
+        glVertex2f(view_right, view_bottom);
+        glVertex2f(view_right, view_top);
+        glVertex2f(view_left, view_top);
+    glEnd();
+
     display();
 }
 
@@ -166,10 +200,14 @@ void display_win(int winner)
     }
 
     glRasterPos2f(40, 50);
-    for (int i = 0; i < message.size(); i++) {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, message[i]);
-    }
-    is_completed = true;
+    print_message(message);
+    
+    glColor3f(1.0, 0.0, 0.0);
+    std::string click_msg = "Click anywhere to restart";
+    glRasterPos2f(27, 5);
+    print_message(click_msg);
+
+    state++;
 }
 
 bool loadTexture(char *filename, unsigned int *texture){
@@ -285,6 +323,13 @@ void draw_initial_board(void)
         }
 
     glEnd();
+}
+
+void print_message(std::string message)
+{
+    for (int i = 0; i < message.size(); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, message[i]);
+    }
 }
 
 bool inside(int x, int y)

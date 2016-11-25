@@ -1,5 +1,6 @@
 #include <utility>
 #include <vector>
+#include <string>
 
 using std::pair;
 using std::vector;
@@ -23,4 +24,7 @@ pair<int, pii> terminal_utility(int max_player);
 vector<pii> find_valid_moves(int player);
 void move_computer(void);
 bool loadTexture(char *filename, unsigned int *texture);
+void move_player(int i, int j);
+void reset_board(void);
+void print_message(std::string message);
 
