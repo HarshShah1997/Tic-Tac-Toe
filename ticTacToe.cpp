@@ -2,6 +2,7 @@
 #include <GL/glut.h>
 #include <string>
 #include <utility>
+#include <SOIL.h>
 
 #include "ticTacToe.h"
 #include "board.h"
@@ -17,6 +18,8 @@ Board board (3, 3);
 int view_left, view_bottom, view_right, view_top;
 int current_player = 1;
 bool is_completed = false;
+unsigned int crossId = 1;
+unsigned int oId = 2;
 
 void display(void)
 {
@@ -169,6 +172,19 @@ void display_win(int winner)
     is_completed = true;
 }
 
+bool loadTexture(char *filename, unsigned int *texture){
+    *texture = SOIL_load_OGL_texture(filename,
+            SOIL_LOAD_AUTO,
+            SOIL_CREATE_NEW_ID,
+            SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MULTIPLY_ALPHA
+            );
+    if(*texture == 0){
+        return false;
+    } else {
+        return true;
+    }
+}
+
 int check_row(int x) 
 {
     if (board.getXY(x, 0) == 0) {
@@ -197,7 +213,7 @@ int check_col(int y)
 
 void init(void)
 {
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClearColor(0.06, 0.06, 0.06, 0.0);
 
     glMatrixMode(GL_MODELVIEW);
     
@@ -208,6 +224,12 @@ void init(void)
 
     gluOrtho2D(view_left, view_right, view_bottom, view_top);
     glClear(GL_COLOR_BUFFER_BIT);
+    if (!loadTexture("textures/x.jpg", &crossId)) {
+        cout << "Unable to load cross" << endl;
+    }
+    if (!loadTexture("textures/o.jpg", &oId)) {
+        cout << "Unable to load o" << endl;
+    }
 }
 
 void fill_board(void)
@@ -225,17 +247,29 @@ void fill_board(void)
 
 void fill_player(int x, int y, int player) 
 {
+    unsigned int textureId;
+
     if (player == 1) {
-        glColor3f(1.0, 0.0, 0.0);
+        textureId = crossId;
     } else {
-        glColor3f(0.0, 1.0, 0.0);
+        textureId = oId;
     }
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, textureId);
     glBegin(GL_POLYGON);
+        glTexCoord2f(0, 0);
         glVertex2f(x * 30 + 5, (3 - y - 1) * 30 + 5);
+
+        glTexCoord2f(1, 0);
         glVertex2f(x * 30 + 5 + 30, (3 - y - 1) * 30 + 5);
+
+        glTexCoord2f(1, 1);
         glVertex2f(x * 30 + 5 + 30, (3 - y -1) * 30 + 5 + 30);
+
+        glTexCoord2f(0, 1);
         glVertex2f(x * 30 + 5, (3 - y - 1)* 30 + 5 + 30);
     glEnd();
+    glDisable(GL_TEXTURE_2D);
 }
 
 void draw_initial_board(void)

@@ -1,6 +1,6 @@
 OBJS = ticTacToe.o board.o
 CC = g++
-OGL= -lGL -lGLU -lglut
+OGL= -lGL -lGLU -lglut -lSOIL
 
 ticTacToe: $(OBJS)
 	$(CC) ticTacToe.o board.o -o ticTacToe $(OGL)

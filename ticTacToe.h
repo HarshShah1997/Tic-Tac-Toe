@@ -22,4 +22,5 @@ vector<pii> find_valid_moves(int player);
 pair<int, pii> terminal_utility(int max_player);
 vector<pii> find_valid_moves(int player);
 void move_computer(void);
+bool loadTexture(char *filename, unsigned int *texture);
 
