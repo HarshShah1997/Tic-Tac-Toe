@@ -8,10 +8,12 @@ A Tic Tac Toe game using OpenGL.
   
 ## How to run ##
 In linux, simply type make.  
+
+## Play against computer ##
+Default mode is two players. Run with --single argument to play against computer.  
   
-Run with --single argument to play against computer.  
-  
-## Snapshots ##  
+## Snapshots ##
+
 ![image](Snapshots/Initial.png)
 ![image](Snapshots/Middle.png)
 ![image](Snapshots/End.png)
