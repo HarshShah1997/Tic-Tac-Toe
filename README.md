@@ -1,12 +1,19 @@
 # Tic-Tac-Toe
 A Tic Tac Toe game using OpenGL.  
   
-Dependencies:  
-1) OpenGL  
-2) Glut  
-3) SOIL (Download it from [here](http://www.lonesock.net/soil.html))
+## Dependencies ##
+1. OpenGL  
+2. Glut  
+3. SOIL (Download it from [here](http://www.lonesock.net/soil.html))
   
-How to run:  
-In linux, simply type make.
+## How to run ##
+In linux, simply type make.  
+  
+Run with --single argument to play against computer.  
+  
+## Snapshots ##  
+![image](Snapshots/Initial.png)
+![image](Snapshots/Middle.png)
+![image](Snapshots/End.png)
 
 
